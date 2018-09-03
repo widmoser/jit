@@ -18,10 +18,13 @@ private:
 public:
     explicit ByteStream(unsigned int capacity = 4096);
 
-    ByteStream& appendInt8(uint8_t byte);
-    ByteStream& appendInt16(uint16_t word);
-    ByteStream& appendInt32(uint32_t dword);
-    ByteStream& appendInt64(uint64_t qword);
+    ByteStream& appendUInt8(uint8_t byte);
+    ByteStream& appendInt8(int8_t byte);
+    ByteStream& appendUInt16(uint16_t word);
+    ByteStream& appendUInt32(uint32_t dword);
+    ByteStream& appendInt32(int32_t dword);
+    int32_t* int32Placeholder(int32_t defaultValue);
+    ByteStream& appendUInt64(uint64_t qword);
 
     const uint8_t* data_ptr() const;
     unsigned long size() const;

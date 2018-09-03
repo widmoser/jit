@@ -8,14 +8,21 @@ ByteStream::ByteStream(unsigned int capacity) : capacity(capacity) {
     data = position = new uint8_t[capacity];
 }
 
-ByteStream& ByteStream::appendInt8(const uint8_t byte) {
+ByteStream& ByteStream::appendUInt8(uint8_t byte) {
     assertCapacity(sizeof(uint8_t));
     *position = byte;
     position += sizeof(uint8_t);
     return *this;
 }
 
-ByteStream& ByteStream::appendInt16(const uint16_t word) {
+ByteStream& ByteStream::appendInt8(int8_t byte) {
+    assertCapacity(sizeof(int8_t));
+    *((int8_t*)position) = byte;
+    position += sizeof(int8_t);
+    return *this;
+}
+
+ByteStream& ByteStream::appendUInt16(uint16_t word) {
     assertCapacity(sizeof(uint16_t));
     assertCapacity(2);
     *((uint16_t*)position) = word;
@@ -23,14 +30,26 @@ ByteStream& ByteStream::appendInt16(const uint16_t word) {
     return *this;
 }
 
-ByteStream& ByteStream::appendInt32(const uint32_t dword) {
+ByteStream& ByteStream::appendUInt32(uint32_t dword) {
     assertCapacity(sizeof(uint32_t));
     *((uint32_t*)position) = dword;
     position += sizeof(uint32_t);
     return *this;
 }
 
-ByteStream& ByteStream::appendInt64(const uint64_t qword) {
+ByteStream& ByteStream::appendInt32(int32_t dword) {
+    assertCapacity(sizeof(int32_t));
+    *((int32_t*)position) = dword;
+    position += sizeof(int32_t);
+    return *this;
+}
+
+int32_t* ByteStream::int32Placeholder(int32_t defaultValue) {
+    appendInt32(defaultValue);
+    return (int32_t*)position - sizeof(int32_t);
+}
+
+ByteStream& ByteStream::appendUInt64(uint64_t qword) {
     assertCapacity(sizeof(uint64_t));
     *((uint64_t*)position) = qword;
     position += sizeof(uint64_t);
