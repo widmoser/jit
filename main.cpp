@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 
     auto* memory = new char[3000000];
 
-    ByteStream code;
+    ByteStream code(300000);
     compile(input, code);
 
     // Allocate writable/executable memory.
@@ -86,6 +86,5 @@ int main(int argc, char *argv[]) {
     auto func = reinterpret_cast<long (*)(void*)>(mem);
 
     func(memory);
-
     return 0;
 }
