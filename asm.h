@@ -130,7 +130,7 @@ void jmp8_const(ByteStream& code, int8_t diff) {
 int32_t* jz32_const(ByteStream& code) {
     code.appendUInt8(0x0F);
     code.appendUInt8(0x84);
-    return code.int32Placeholder((int32_t)code.size() - 2);
+    return code.int32Placeholder((int32_t)code.size() + 4);
 }
 
 void jz8_const(ByteStream& code, int8_t diff) {

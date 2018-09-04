@@ -46,7 +46,7 @@ ByteStream& ByteStream::appendInt32(int32_t dword) {
 
 int32_t* ByteStream::int32Placeholder(int32_t defaultValue) {
     appendInt32(defaultValue);
-    return (int32_t*)position - sizeof(int32_t);
+    return (int32_t*)(position - sizeof(int32_t));
 }
 
 ByteStream& ByteStream::appendUInt64(uint64_t qword) {
