@@ -14,20 +14,39 @@ const int DATA_PTR = 3;
 void compile(std::istream& input, ByteStream& code) {
     std::stack<int32_t*> jumpSlots;
     mov64reg_reg(code, DATA_PTR, 7);
+
+    int pendingCharacter = 0;
+    int pendingCharacterCount = 0;
+
     while (!input.eof()) {
         int ch = input.get();
+
+        if (pendingCharacterCount > 0 && ch != pendingCharacter) {
+            // Flush:
+            switch (pendingCharacter) {
+                case '>':
+                    add64reg_const(code, DATA_PTR, pendingCharacterCount);
+                    break;
+                case '<':
+                    add64reg_const(code, DATA_PTR, -pendingCharacterCount);
+                    break;
+                case '+':
+                    add8mem_const(code, DATA_PTR, pendingCharacterCount);
+                    break;
+                case '-':
+                    add8mem_const(code, DATA_PTR, -pendingCharacterCount);
+                    break;
+            }
+            pendingCharacterCount = pendingCharacter = 0;
+        }
+
         switch (ch) {
             case '>':
-                add64reg_const(code, DATA_PTR, 1);
-                break;
             case '<':
-                add64reg_const(code, DATA_PTR, -1);
-                break;
             case '+':
-                add8mem_const(code, DATA_PTR, 1);
-                break;
             case '-':
-                add8mem_const(code, DATA_PTR, -1);
+                pendingCharacter = ch;
+                pendingCharacterCount++;
                 break;
             case '.':
 //              OSX: mov64reg_const(code, 0, 0x2000004);
