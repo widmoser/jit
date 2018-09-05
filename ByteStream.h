@@ -13,18 +13,29 @@ private:
     const uint8_t* data;
     uint8_t* position;
 
+    uint8_t* sizeMeasurementReference;
+
     void assertCapacity(unsigned int additionalCapacity);
     void allocate(unsigned int capacity);
 public:
     explicit ByteStream(unsigned int capacity = 4096);
 
-    ByteStream& appendUInt8(uint8_t byte);
-    ByteStream& appendInt8(int8_t byte);
-    ByteStream& appendUInt16(uint16_t word);
-    ByteStream& appendUInt32(uint32_t dword);
-    ByteStream& appendInt32(int32_t dword);
-    int32_t* int32Placeholder(int32_t defaultValue);
-    ByteStream& appendUInt64(uint64_t qword);
+    template <class T> ByteStream& append(T value) {
+        if (sizeMeasurementReference != nullptr) {
+            assertCapacity(sizeof(T));
+            *((T *) position) = value;
+        }
+        position += sizeof(T);
+        return *this;
+    }
+
+    template <class T> T* placeholder(T defaultValue) {
+        append(defaultValue);
+        return (T*)(position - sizeof(T));
+    }
+
+    void startMeasuringSize();
+    unsigned long endMeasuringSize();
 
     const uint8_t* data_ptr() const;
     unsigned long size() const;
