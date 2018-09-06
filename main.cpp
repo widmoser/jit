@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stack>
 #include <fstream>
+#include <regex>
 
 #include "ByteStream.h"
 #include "asm.h"
@@ -79,6 +80,26 @@ void compile(std::istream& input, ByteStream& code) {
     }
     mov64reg_reg(code, 0, DATA_PTR);
     ret(code);
+}
+
+void compile_regex(std::istream& input, ByteStream& code) {
+    char* program = new char[30000];
+    input.read(program, 30000);
+
+    std::regex r("[\\+-]+|[<>]+|[,.\\[\\]]");
+    std::cmatch matches;
+    auto words_begin = std::cregex_iterator(program, &program[strlen(program)], r);
+    auto words_end = std::cregex_iterator();
+
+    std::cout << "Found "
+              << std::distance(words_begin, words_end)
+              << " words\n";
+
+    for (std::cregex_iterator i = words_begin; i != words_end; ++i) {
+        std::cmatch match = *i;
+        std::string match_str = match.str();
+        std::cout << "  " << match_str << '\n';
+    }
 }
 
 int main(int argc, char *argv[]) {
