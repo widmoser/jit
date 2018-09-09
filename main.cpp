@@ -6,6 +6,7 @@
 #include <stack>
 #include <fstream>
 #include <regex>
+#include <iomanip>
 
 #include "ByteStream.h"
 #include "asm.h"
@@ -99,6 +100,16 @@ void compile_regex(std::istream& input, ByteStream& code) {
         std::cmatch match = *i;
         std::string match_str = match.str();
         std::cout << "  " << match_str << '\n';
+    }
+}
+
+std::ostream &operator<<(std::ostream &out, const ByteStream &stream) {
+    const uint8_t* data = stream.data_ptr();
+    for (int i = 0; i < stream.size(); ++i) {
+        out << std::setfill('0') << std::setw(2) << std::hex << (int)(*data++);
+        if ((i+1) % 16 == 0) {
+            out << std::endl;
+        }
     }
 }
 

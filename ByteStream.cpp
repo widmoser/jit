@@ -4,8 +4,12 @@
 
 #include "ByteStream.h"
 
-ByteStream::ByteStream(unsigned int capacity) : capacity(capacity) {
+ByteStream::ByteStream(unsigned int capacity) : capacity(capacity), sizeMeasurementReference(nullptr) {
     data = position = new uint8_t[capacity];
+}
+
+ByteStream::~ByteStream() {
+    delete data;
 }
 
 const uint8_t* ByteStream::data_ptr() const {

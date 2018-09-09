@@ -19,9 +19,10 @@ private:
     void allocate(unsigned int capacity);
 public:
     explicit ByteStream(unsigned int capacity = 4096);
+    ~ByteStream();
 
     template <class T> ByteStream& append(T value) {
-        if (sizeMeasurementReference != nullptr) {
+        if (sizeMeasurementReference == nullptr) {
             assertCapacity(sizeof(T));
             *((T *) position) = value;
         }
